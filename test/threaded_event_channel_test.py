@@ -26,15 +26,29 @@ class TestThreadedEventChannel(unittest.TestCase):
     def tearDownClass(cls):
         pass
 
+    def test_subscribe_fail_event(self):
+        self.assertRaises(
+            ValueError,
+            self.channel.subscribe,
+            "",
+            lambda x: x + 1)
+            
+    def test_subscribe_fail_function(self):
+        self.assertRaises(
+            ValueError,
+            self.channel.subscribe,
+            "myevent",
+            13)
+
     def test_subscribe(self):
-        ff = lambda x: print(x)
+        ff = lambda x: x + 1
         self.channel.subscribe("myevent", ff)
         self.assertIn(ff, self.channel.subscribers["myevent"])
         self.channel.unsubscribe("myevent", ff)
         self.assertNotIn(ff, self.channel.subscribers["myevent"])
 
     def test_unsubscribe(self):
-        ff = lambda x: print(x)
+        ff = lambda x: x + 1
         self.channel.subscribe("myevent", ff)
         self.assertIn(ff, self.channel.subscribers["myevent"])
         self.channel.unsubscribe("myevent", ff)
