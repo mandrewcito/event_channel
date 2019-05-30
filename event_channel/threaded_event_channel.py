@@ -4,7 +4,8 @@ from .event_channel import EventChannel
 
 
 class ThreadedEventChannel(EventChannel):
-    def __init__(self):
+    def __init__(self, blocking=True):
+        self.blocking = blocking
         super(ThreadedEventChannel, self).__init__()
 
     def publish(self, event, *args, **kwargs):
@@ -19,7 +20,9 @@ class ThreadedEventChannel(EventChannel):
             for th in threads:
                 th.start()
 
-            for th in threads:
-                th.join()
+            if self.blocking:
+                for th in threads:
+                    th.join()
 
 channel = ThreadedEventChannel()
+non_blocking_channel = ThreadedEventChannel(blocking=False)

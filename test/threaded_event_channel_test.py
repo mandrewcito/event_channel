@@ -7,6 +7,7 @@ from event_channel.threaded_event_channel import ThreadedEventChannel
 class TestThreadedEventChannel(unittest.TestCase):
     def setUp(self):
         self.channel = ThreadedEventChannel()
+        self.non_blocking_channel = ThreadedEventChannel(blocking=False)
         self.myvalue = None
         self.myvalue_x = None
         self.myvalue_y = None
@@ -59,10 +60,11 @@ class TestThreadedEventChannel(unittest.TestCase):
         time.sleep(4)
 
     def multi_aux_func(self, x, y, z):
+        time.sleep(2)
         self.myvalue_x = x
         self.myvalue_y = y
         self.myvalue_z = z
-        time.sleep(2)
+
 
     def test_publish(self):
         evt = "myevent"
@@ -90,3 +92,20 @@ class TestThreadedEventChannel(unittest.TestCase):
         self.assertEqual(self.myvalue_z, 333)
         self.channel.unsubscribe(evt, func)
         self.assertNotIn(func, self.channel.subscribers[evt])
+
+    def test_non_blocking(self):
+        evt = "myevent"
+        func = self.multi_aux_func
+        x, y, z = self.myvalue_x, self.myvalue_y, self.myvalue_z
+        self.non_blocking_channel.subscribe(evt, func)
+        self.assertIn(func, self.non_blocking_channel.subscribers[evt])
+        self.non_blocking_channel.publish(evt, 345, "asf", 333)
+        self.assertEqual(self.myvalue_x, x)
+        self.assertEqual(self.myvalue_y, y)
+        self.assertEqual(self.myvalue_z, z)
+        time.sleep(2)
+        self.assertEqual(self.myvalue_x, 345)
+        self.assertEqual(self.myvalue_y, "asf")
+        self.assertEqual(self.myvalue_z, 333)
+        self.non_blocking_channel.unsubscribe(evt, func)
+        self.assertNotIn(func, self.non_blocking_channel.subscribers[evt])
