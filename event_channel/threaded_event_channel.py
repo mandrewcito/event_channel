@@ -16,11 +16,10 @@ class ThreadedEventChannel(EventChannel):
                   args=args,
                   kwargs=kwargs
                 ))
+            for th in threads:
+                th.start()
 
-                for th in threads:
-                    th.start()
-
-                for th in threads:
-                    th.join()
+            for th in threads:
+                th.join()
 
 channel = ThreadedEventChannel()

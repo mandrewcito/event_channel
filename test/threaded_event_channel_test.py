@@ -1,4 +1,5 @@
 import unittest
+import time
 
 from event_channel.threaded_event_channel import ThreadedEventChannel
 
@@ -41,21 +42,28 @@ class TestThreadedEventChannel(unittest.TestCase):
 
     def aux_func(self, x):
         self.myvalue = x
+        time.sleep(4)
 
     def multi_aux_func(self, x, y, z):
         self.myvalue_x = x
         self.myvalue_y = y
         self.myvalue_z = z
+        time.sleep(2)
 
     def test_publish(self):
         evt = "myevent"
         func = self.aux_func
+        func2 = self.aux_func
         self.channel.subscribe(evt, func)
+        self.channel.subscribe(evt, func2)
         self.assertIn(func, self.channel.subscribers[evt])
+        self.assertIn(func2, self.channel.subscribers[evt])
         self.channel.publish(evt, 345)
         self.assertEqual(self.myvalue, 345)
         self.channel.unsubscribe(evt, func)
+        self.channel.unsubscribe(evt, func2)
         self.assertNotIn(func, self.channel.subscribers[evt])
+        self.assertNotIn(func2, self.channel.subscribers[evt])
 
     def test_publish_multi(self):
         evt = "myevent"

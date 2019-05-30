@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="event_channel",
-    version="0.3.1",
+    version="0.3.2",
     author="mandrewcito",
     author_email="anbaalo@gmail.com",
     description="Pub sub implementation",
