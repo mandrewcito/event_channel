@@ -103,7 +103,7 @@ class TestThreadedEventChannel(unittest.TestCase):
         self.assertEqual(self.myvalue_x, x)
         self.assertEqual(self.myvalue_y, y)
         self.assertEqual(self.myvalue_z, z)
-        time.sleep(2)
+        time.sleep(2.5)
         self.assertEqual(self.myvalue_x, 345)
         self.assertEqual(self.myvalue_y, "asf")
         self.assertEqual(self.myvalue_z, 333)
