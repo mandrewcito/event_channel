@@ -1,11 +1,11 @@
 import unittest
 
-from event_channel.event_channel import EventChannel
+from event_channel.threaded_event_channel import ThreadedEventChannel
 
 
-class TestEventChannel(unittest.TestCase):
+class TestThreadedEventChannel(unittest.TestCase):
     def setUp(self):
-        self.channel = EventChannel()
+        self.channel = ThreadedEventChannel()
         self.myvalue = None
         self.myvalue_x = None
         self.myvalue_y = None
