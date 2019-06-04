@@ -1,5 +1,16 @@
+import logging
+
+
 class EventChannel(object):
     def __init__(self):
+        logger = logging.getLogger(__name__)
+        handler = logging.StreamHandler()
+        formatter = logging.Formatter(
+                '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+        logger.setLevel(logging.WARNING)
+        self._log = logger
         self.subscribers = {}
 
     def unsubscribe(self, event, callback):
@@ -11,6 +22,11 @@ class EventChannel(object):
                     self.subscribers[event]
                 )
             )
+        else:
+            self._log.warning(
+                "Cant unsubscribe function '{0}' from event '{1}' ".format(
+                    event,
+                    callback))
 
     def subscribe(self, event, callback):
         if not callable(callback):
@@ -28,5 +44,7 @@ class EventChannel(object):
         if event in self.subscribers.keys():
             for callback in self.subscribers[event]:
                 callback(*args, **kwargs)
+        else:
+            self._log.warning("Event {0} has no subscribers".format(event))
 
 channel = EventChannel()

@@ -23,6 +23,9 @@ class ThreadedEventChannel(EventChannel):
             if self.blocking:
                 for th in threads:
                     th.join()
+        else:
+            self._log.warning("Event {0} has no subscribers".format(event))
 
 channel = ThreadedEventChannel()
+
 non_blocking_channel = ThreadedEventChannel(blocking=False)
