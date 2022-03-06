@@ -7,3 +7,60 @@
 ![Issues](https://img.shields.io/github/issues/mandrewcito/event_channel.svg)
 ![Open issues](https://img.shields.io/github/issues-raw/mandrewcito/event_channel.svg)
 ![codecov.io](https://codecov.io/github/mandrewcito/event_channel/coverage.svg?branch=master)
+
+Another library with a pub/sub implementation. You can subscribe functions to a certain topic (aka event). When a message is sent through this event callback functions subscribed will be executed.
+
+```python
+from event_channel import EventChannel
+
+mychannel = EventChannel() # You can also import channel, is an instance already created
+
+def callback(x):
+    x = x + 1
+    print(x)
+
+mychannel.subscribe("myevent", callback)
+
+mychannel.publish("myevent", 345)
+
+channel.unsubscribe("myevent", callback)
+```
+
+
+```python
+
+from event_channel.threaded_event_channel import ThreadedEventChannel
+
+mychannel =  ThreadedEventChannel(blocking=False) # You can also import non_blocking_channel, is an instance already created
+
+def callback(x):
+    x = x + 1
+    print(x)
+
+mychannel.subscribe("myevent", callback)
+mychannel.subscribe("myevent", callback2)
+
+threads = mychannel.publish("myevent", 345)
+
+# Wait thread finish
+for thread in threads:
+    thread.join()
+```
+
+```python
+
+from event_channel.threaded_event_channel import ThreadedEventChannel
+
+my_blocking_channel = ThreadedEventChannel() # You can also import channel, is an instance already created
+
+def callback(x):
+    x = x + 1
+    print(x)
+
+mychannel.subscribe("myevent", callback)
+mychannel.subscribe("myevent", callback2)
+
+threads = mychannel.publish("myevent", 345)
+#at this point all threads are finished
+
+```

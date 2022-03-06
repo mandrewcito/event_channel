@@ -10,21 +10,25 @@ class ThreadedEventChannel(EventChannel):
 
     def publish(self, event, *args, **kwargs):
         threads = []
-        if event in self.subscribers.keys():
-            for callback in self.subscribers[event]:
-                threads.append(threading.Thread(
-                  target=callback,
-                  args=args,
-                  kwargs=kwargs
-                ))
-            for th in threads:
-                th.start()
 
-            if self.blocking:
-                for th in threads:
-                    th.join()
-        else:
+        if event not in self.subscribers.keys():
             self._log.warning("Event {0} has no subscribers".format(event))
+            return []
+
+        for callback in self.subscribers[event]:
+            threads.append(threading.Thread(
+                target=callback,
+                args=args,
+                kwargs=kwargs
+            ))
+
+        for th in threads:
+            th.start()
+
+        if self.blocking:
+            for th in threads:
+                th.join()
+        return threads
 
 channel = ThreadedEventChannel()
 
