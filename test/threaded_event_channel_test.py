@@ -101,7 +101,7 @@ class TestThreadedEventChannel(unittest.TestCase):
         self.assertIn(func, self.non_blocking_channel.subscribers[evt])
         threads = self.non_blocking_channel.publish(evt, 345, "asf", 333)
         
-        self.assertEquals(len(threads), len(self.non_blocking_channel.subscribers[evt]))
+        self.assertEqual(len(threads), len(self.non_blocking_channel.subscribers[evt]))
         self.assertEqual(self.myvalue_x, x)
         self.assertEqual(self.myvalue_y, y)
         self.assertEqual(self.myvalue_z, z)

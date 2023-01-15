@@ -1,14 +1,14 @@
 import threading
 
 from .event_channel import EventChannel
-
+from typing import List
 
 class ThreadedEventChannel(EventChannel):
     def __init__(self, blocking=True):
         self.blocking = blocking
         super(ThreadedEventChannel, self).__init__()
 
-    def publish(self, event, *args, **kwargs):
+    def publish(self, event, *args, **kwargs) -> List[threading.Thread]:
         threads = []
 
         if event not in self.subscribers.keys():
